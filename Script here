@@ -1,0 +1,44 @@
+local adminPanel = script.Parent
+local players = game:GetService("Players")
+local player = players.LocalPlayer
+
+local function onActivated()
+    -- Fling command
+    if input.KeyCode == Enum.KeyCode.F then
+        local playerToFling = players:GetPlayerFromName(input.Text)
+        if playerToFling then
+            playerToFling.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 10)
+        end
+    end
+
+    -- Flight command
+    if input.KeyCode == Enum.KeyCode.F then
+        player.Character.Humanoid.WalkSpeed = 0
+        player.Character.Humanoid.JumpPower = 0
+    end
+
+    -- Kill command
+    if input.KeyCode == Enum.KeyCode.K then
+        local playerToKill = players:GetPlayerFromName(input.Text)
+        if playerToKill then
+            playerToKill.Character.Humanoid.Health = 0
+        end
+    end
+
+    -- Gun command
+    if input.KeyCode == Enum.KeyCode.G then
+        -- Add gun functionality here
+    end
+end
+
+adminPanel.Activated:Connect(onActivated)
+
+local function onPlayerAdded(player)
+    local character = player.Character
+    character:WaitForChild("AdminPanel").Parent = adminPanel
+    player.CharacterAdded:Connect(function()
+        player.Character:WaitForChild("AdminPanel").Activated:Connect(onActivated)
+    end)
+end
+
+Players.PlayerAdded:Connect(onPlayerAdded)
